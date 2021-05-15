@@ -1,5 +1,5 @@
 class USERS_DB:
-    NAME = 'coffee_users'
+    DB = 'coffee_users'
     COLLECTION = 'users'
 
 class DB_FIELDS:

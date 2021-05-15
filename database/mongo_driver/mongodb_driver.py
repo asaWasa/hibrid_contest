@@ -52,6 +52,10 @@ class MongoDBDriver(DbDriverInterface):
         self.__prepare()
         return self.collection.find_one({key: value})
 
+    def get_last_item(self, param='id'):
+        self.__prepare()
+        return dict(list(self.collection.find().sort(param, -1).limit(1))[0])
+
     def push_list(self, data_list=None):
         self.__prepare()
         self.collection.insert_many(data_list)
@@ -71,7 +75,6 @@ class MongoDBDriver(DbDriverInterface):
             return result
         except:
             pass
-
 
     def is_in(self, index=None, value=None):
         self.__prepare()
