@@ -16,14 +16,26 @@ def main_keyboard():
     markup.add('Заполнить профиль')
     return markup
 
+
+def reply_submit_keyboard():
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    markup.add('Через час')
+    markup.add('Через 2 часа')
+    markup.add('Через 5 часов')
+    markup.add('Через 7 часа')
+    markup.add('Через 1 день')
+    return markup
+
+
 def about_keyboard():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
     markup.add('Закончить')
     return markup
 
+
 def reply_selection_keyboard():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
-    markup.add('Назначить встречу', '->')
+    markup.add('Да', '->')
     return markup
 
 
@@ -384,6 +396,7 @@ def add_list_elem(object, key, element):
 
 @dp.message_handler(Text(equals='Предложить собеседника'), state=MainState.main)
 async def get_random_user(message: types.Message, state: FSMContext):
+
     markup = reply_selection_keyboard()
     _object = SelectionAlgorithm()
     await message.answer('Пригласить на кофе?', reply_markup=markup)
@@ -395,9 +408,26 @@ async def get_random_user(message: types.Message, state: FSMContext):
                                     md.text("Я работаю в отделе(-ax):", str(user.department) + '\n'),
                                       )
                               )
+        async with state.proxy() as user_data:
+            user_data['select_user'] = user.id
+        break
 
     await MainState.selection.set()
 
+
+@dp.message_handler(Text(equals='Да'), state=MainState.selection)
+async def get_random_user(message: types.Message, state: FSMContext):
+    time = reply_submit_keyboard()
+    await message.answer('Выберите дату и время когда хотите встретится', reply_markup=time)
+
+
+@dp.message_handler(Text(equals='->'), state=MainState.selection)
+async def get_random_user(message: types.Message, state: FSMContext):
+    await MainState.selection.set()
+
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    markup.add('Предложить собеседника')
+    await message.answer('Предложить нового собеседника?', reply_markup=markup)
 
 # @dp.message_handler(state=MainState.selection)
 # async def get_random_user(message: types.Message, state: FSMContext):
