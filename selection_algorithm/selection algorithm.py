@@ -1,6 +1,8 @@
 from database.mongo_driver.mongodb_driver import MongoDBDriver
 from constants import *
 from database.cv_interface import *
+
+
 class SelectionAlgorithm:
     def __init__(self, ):
         pass
