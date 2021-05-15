@@ -100,7 +100,6 @@ async def callback_button_ristretto(query: types.CallbackQuery, state: FSMContex
         except:
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.RISTRETTO)
-        await query.message.answer(user_data)
 
 
 
@@ -123,7 +122,6 @@ async def callback_button_espresso(query: types.CallbackQuery, state: FSMContext
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.ESPRESSO)
 
-        await query.message.answer(user_data)
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Americano'), state=AuthState.coffee_type)
 async def callback_button_americano(query: types.CallbackQuery, state: FSMContext):
@@ -137,7 +135,6 @@ async def callback_button_americano(query: types.CallbackQuery, state: FSMContex
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.AMERICANO)
 
-        await query.message.answer(user_data)
 
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Double_espresso'), state=AuthState.coffee_type)
@@ -152,7 +149,6 @@ async def callback_button_double_espresso(query: types.CallbackQuery, state: FSM
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.DOUBLE_ESPRESSO)
 
-        await query.message.answer(user_data)
 
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Kapucino'), state=AuthState.coffee_type)
@@ -167,7 +163,6 @@ async def callback_button_kapucino(query: types.CallbackQuery, state: FSMContext
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.KAPUCINO)
 
-        await query.message.answer(user_data)
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Latte'), state=AuthState.coffee_type)
 async def callback_button_latte(query: types.CallbackQuery, state: FSMContext):
@@ -181,7 +176,6 @@ async def callback_button_latte(query: types.CallbackQuery, state: FSMContext):
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.LATTE)
 
-        await query.message.answer(user_data)
 
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Kakao'), state=AuthState.coffee_type)
@@ -196,7 +190,6 @@ async def callback_button_kakao(query: types.CallbackQuery, state: FSMContext):
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.KAKAO)
 
-        await query.message.answer(user_data)
 
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Marshmello'), state=AuthState.coffee_type)
@@ -211,7 +204,6 @@ async def callback_button_marshmello(query: types.CallbackQuery, state: FSMConte
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.MARSHMELLO)
 
-        await query.message.answer(user_data)
 
 
 @dp.message_handler(state=AuthState.coffee_type)
@@ -255,7 +247,6 @@ async def callback_button_marketing(query: types.CallbackQuery, state: FSMContex
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.MARKETING)
 
-        await query.message.answer(user_data)
 
 
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Finance'), state=AuthState.department)
@@ -270,7 +261,6 @@ async def callback_button_finance(query: types.CallbackQuery, state: FSMContext)
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.FINANCE)
 
-        await query.message.answer(user_data)
 
 
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Dev and testing'), state=AuthState.department)
@@ -285,7 +275,6 @@ async def callback_button_dev_test(query: types.CallbackQuery, state: FSMContext
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.DEV_AND_TESTING)
 
-        await query.message.answer(user_data)
 
 
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Media_Bayer'), state=AuthState.department)
@@ -299,7 +288,6 @@ async def callback_button_media_bayer(query: types.CallbackQuery, state: FSMCont
         except:
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.MEDIA_BAYER)
-        await query.message.answer(user_data)
 
 
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Sales'), state=AuthState.department)
@@ -313,7 +301,6 @@ async def callback_button_sales(query: types.CallbackQuery, state: FSMContext):
         except:
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.SALES)
-        await query.message.answer(user_data)
 
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Partner relations'), state=AuthState.department)
 async def callback_button_partner_rel(query: types.CallbackQuery, state: FSMContext):
@@ -326,7 +313,6 @@ async def callback_button_partner_rel(query: types.CallbackQuery, state: FSMCont
         except:
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.PARTNER_RELATIONS)
-        await query.message.answer(user_data)
 
 
 @dp.callback_query_handler(Text(equals='add_dep_' + "Media"), state=AuthState.department)
@@ -340,7 +326,6 @@ async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
         except:
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.MEDIA)
-        await query.message.answer(user_data)
 
 
 @dp.callback_query_handler(Text(equals='add_dep_' + "Administrative staff"), state=AuthState.department)
@@ -354,7 +339,6 @@ async def callback_button_administrative_stuff(query: types.CallbackQuery, state
         except:
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.ADMINISTRATIVE_STAFF)
-        await query.message.answer(user_data)
 
 #------------------------------------------------------------------------------------
 
