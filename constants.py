@@ -43,6 +43,27 @@ class DEPARTMENT:
         else:
             return False
 
+    @classmethod
+    def get_string(cls, id):
+        if id == DEPARTMENT.MARKETING:
+            return 'Маркетинг'
+        elif id == DEPARTMENT.FINANCE:
+            return 'Финансы'
+        elif id == DEPARTMENT.DEV_AND_TESTING:
+            return  'Разработка и тестирование'
+        elif id == DEPARTMENT.MEDIA_BAYER:
+            return 'Медиа-байеры'
+        elif id == DEPARTMENT.SALES:
+            return 'Продажи'
+        elif id == DEPARTMENT.PARTNER_RELATIONS:
+            return 'Работа с партнерами'
+        elif id == DEPARTMENT.MEDIA:
+            return 'Медиа-планирование'
+        elif id == DEPARTMENT.ADMINISTRATIVE_STAFF:
+            return 'Административный персонал'
+        else:
+            return None
+
 
 class COFFEE:
     RISTRETTO = 0
@@ -61,3 +82,24 @@ class COFFEE:
             return True
         else:
             return False
+
+    @classmethod
+    def get_string(cls, id):
+        if id == COFFEE.RISTRETTO:
+            return 'Ристретто'
+        elif id == COFFEE.ESPRESSO:
+            return 'Экспрессо'
+        elif id == COFFEE.AMERICANO:
+            return 'Американо'
+        elif id == COFFEE.DOUBLE_ESPRESSO:
+            return 'Двойной экспрессо'
+        elif id == COFFEE.KAPUCINO:
+            return 'Капучин'
+        elif id == COFFEE.LATTE:
+            return 'Латте'
+        elif id == COFFEE.KAKAO:
+            return 'Какао'
+        elif id == COFFEE.MARSHMELLO:
+            return 'Кофе с маршмеллоу'
+        else:
+            return None
