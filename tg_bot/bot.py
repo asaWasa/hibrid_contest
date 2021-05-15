@@ -9,13 +9,17 @@ import aiogram.utils.markdown as md
 from constants import *
 
 
-def main_key_board():
+def main_keyboard():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
     markup.add('Предложить собеседника')
     markup.add('Посмотреть встречи')
     markup.add('Заполнить профиль')
     return markup
 
+def about_keyboard():
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
+    markup.add('Пропустить')
+    return markup
 
 def reply_selection_keyboard():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
@@ -49,18 +53,19 @@ class AuthState(StatesGroup):
     name = State()
     department = State()
     coffee_type = State()
+    about = State()
     end = State()
 
 
 @dp.message_handler(commands='start', state="*")
 async def cmd_start(message: types.Message, state: FSMContext):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
-    # todo проверить что человек в базе
+
     user = message.from_user.get_current()
     async with state.proxy() as user_data:
         user_data['tg_data'] = user
     if user_in_base(user.id):
-        markup = main_key_board()
+        markup = main_keyboard()
         await message.answer("Привет!, {}".format(str(user.first_name)), reply_markup=markup)
         await MainState.main.set()
     else:
@@ -75,7 +80,7 @@ async def cmd_auth(message: types.Message, state: FSMContext):
     await AuthState.coffee_type.set()
     coffees = ['Ristretto', 'Espresso', 'Americano',
                'Double_espresso', 'Kapucino', 'Latte',
-               'Kakao', 'Marshmello']
+               'Kakao', 'Marshmello', 'Закончить выбор']
     btns = list()
     media = types.InlineKeyboardMarkup(row_width=1)
     for coffee in coffees:
@@ -97,6 +102,15 @@ async def callback_button_ristretto(query: types.CallbackQuery, state: FSMContex
             user_data['coffee'].add(COFFEE.RISTRETTO)
 
         await query.message.answer(user_data)
+
+
+@dp.callback_query_handler(Text(equals='add_coffee_' + 'Закончить выбор'), state=AuthState.department)
+async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
+    markup = about_keyboard()
+    await query.message.answer('Напишите о себе:', reply_markup=markup)
+    await query.message.answer('Как тебя зовут?')
+    await AuthState.name.set()
+
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Espresso'), state=AuthState.coffee_type)
 async def callback_button_espresso(query: types.CallbackQuery, state: FSMContext):
@@ -218,7 +232,7 @@ async def auth_name(message: types.Message, state: FSMContext):
     await message.answer('Выбери отдел в котором работаешь:')
     await AuthState.department.set()
     departments = ['Marketing', 'Finance', 'Dev and testing',
-                   'Media_Bayer', 'Sales', 'Partner relations', "Media", "Administrative staff"]
+                   'Media_Bayer', 'Sales', 'Partner relations', "Media", "Administrative staff", "Закончить выбор"]
     btns = list()
     media = types.InlineKeyboardMarkup(row_width=1)
     for dep in departments:
@@ -345,6 +359,13 @@ async def callback_button_administrative_stuff(query: types.CallbackQuery, state
 
 #------------------------------------------------------------------------------------
 
+@dp.callback_query_handler(Text(equals='add_dep_' + 'Закончить выбор'), state=AuthState.department)
+async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
+    markup = about_keyboard()
+    await query.message.answer('Напишите о себе:', reply_markup=markup)
+    await AuthState.about.set()
+
+
 @dp.message_handler(state=AuthState.department)
 async def auth_dep(message: types.Message, state: FSMContext):
     pass
@@ -367,7 +388,7 @@ async def auth_dep(message: types.Message, state: FSMContext):
         data["tg_language_code"] = user_data['tg_data']['language_code']
 
     db_users.push(CV(data).to_dict())
-    await message.answer('Профиль успешно создан', reply_markup=main_key_board())
+    await message.answer('Профиль успешно создан', reply_markup=main_keyboard())
     await MainState.main.set()
 
 
@@ -384,7 +405,6 @@ def add_list_elem(object, key, element):
 @dp.message_handler(Text(equals='Предложить собеседника'), state=MainState.main)
 async def get_random_user(message: types.Message, state: FSMContext):
     markup = reply_selection_keyboard()
-
     await message.answer('В этом разделе вы сможете выбрать собеседника', reply_markup=markup)
     await MainState.selection.set()
 
