@@ -90,7 +90,7 @@ async def cmd_auth(message: types.Message, state: FSMContext):
 
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Ristretto'), state=AuthState.coffee_type)
-async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
+async def callback_button_ristretto(query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as user_data:
         try:
             if COFFEE.RISTRETTO in user_data['coffee']:
@@ -102,11 +102,125 @@ async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
             user_data['coffee'].add(COFFEE.RISTRETTO)
         await query.message.answer(user_data)
 
+        await query.message.answer(user_data)
+
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Закончить выбор'), state=AuthState.coffee_type)
 async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
     await query.message.answer('Напишите о себе:')
     await query.message.answer('Как тебя зовут?')
+    await AuthState.name.set()
+
+
+@dp.callback_query_handler(Text(equals='add_coffee_' + 'Espresso'), state=AuthState.coffee_type)
+async def callback_button_espresso(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if COFFEE.ESPRESSO in user_data['coffee']:
+                user_data['coffee'].pop(COFFEE.ESPRESSO)
+            elif user_data['coffee']:
+                user_data['coffee'].add(COFFEE.ESPRESSO)
+        except:
+            user_data['coffee'] = set()
+            user_data['coffee'].add(COFFEE.ESPRESSO)
+
+        await query.message.answer(user_data)
+
+@dp.callback_query_handler(Text(equals='add_coffee_' + 'Americano'), state=AuthState.coffee_type)
+async def callback_button_americano(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if COFFEE.AMERICANO in user_data['coffee']:
+                user_data['coffee'].pop(COFFEE.AMERICANO)
+            elif user_data['coffee']:
+                user_data['coffee'].add(COFFEE.AMERICANO)
+        except:
+            user_data['coffee'] = set()
+            user_data['coffee'].add(COFFEE.AMERICANO)
+
+        await query.message.answer(user_data)
+
+
+@dp.callback_query_handler(Text(equals='add_coffee_' + 'Double_espresso'), state=AuthState.coffee_type)
+async def callback_button_double_espresso(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if COFFEE.DOUBLE_ESPRESSO in user_data['coffee']:
+                user_data['coffee'].pop(COFFEE.DOUBLE_ESPRESSO)
+            elif user_data['coffee']:
+                user_data['coffee'].add(COFFEE.DOUBLE_ESPRESSO)
+        except:
+            user_data['coffee'] = set()
+            user_data['coffee'].add(COFFEE.DOUBLE_ESPRESSO)
+
+        await query.message.answer(user_data)
+
+
+@dp.callback_query_handler(Text(equals='add_coffee_' + 'Kapucino'), state=AuthState.coffee_type)
+async def callback_button_kapucino(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if COFFEE.KAPUCINO in user_data['coffee']:
+                user_data['coffee'].pop(COFFEE.KAPUCINO)
+            elif user_data['coffee']:
+                user_data['coffee'].add(COFFEE.KAPUCINO)
+        except:
+            user_data['coffee'] = set()
+            user_data['coffee'].add(COFFEE.KAPUCINO)
+
+        await query.message.answer(user_data)
+
+@dp.callback_query_handler(Text(equals='add_coffee_' + 'Latte'), state=AuthState.coffee_type)
+async def callback_button_latte(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if COFFEE.LATTE in user_data['coffee']:
+                user_data['coffee'].pop(COFFEE.LATTE)
+            elif user_data['coffee']:
+                user_data['coffee'].add(COFFEE.LATTE)
+        except:
+            user_data['coffee'] = set()
+            user_data['coffee'].add(COFFEE.LATTE)
+
+        await query.message.answer(user_data)
+
+
+@dp.callback_query_handler(Text(equals='add_coffee_' + 'Kakao'), state=AuthState.coffee_type)
+async def callback_button_kakao(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if COFFEE.KAKAO in user_data['coffee']:
+                user_data['coffee'].pop(COFFEE.KAKAO)
+            elif user_data['coffee']:
+                user_data['coffee'].add(COFFEE.KAKAO)
+        except:
+            user_data['coffee'] = set()
+            user_data['coffee'].add(COFFEE.KAKAO)
+
+        await query.message.answer(user_data)
+
+
+@dp.callback_query_handler(Text(equals='add_coffee_' + 'Marshmello'), state=AuthState.coffee_type)
+async def callback_button_marshmello(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if COFFEE.MARSHMELLO in user_data['coffee']:
+                user_data['coffee'].pop(COFFEE.MARSHMELLO)
+            elif user_data['coffee']:
+                user_data['coffee'].add(COFFEE.MARSHMELLO)
+        except:
+            user_data['coffee'] = set()
+            user_data['coffee'].add(COFFEE.MARSHMELLO)
+
+        await query.message.answer(user_data)
+
+
+@dp.message_handler(state=AuthState.coffee_type)
+async def auth_name(message: types.Message, state: FSMContext):
+    coffee_type = message.text
+    async with state.proxy() as user_data:
+        user_data['coffee_type'] = coffee_type
+    await message.answer('Как тебя зовут?')
     await AuthState.name.set()
 
 
@@ -243,6 +357,7 @@ async def callback_button_administrative_stuff(query: types.CallbackQuery, state
             user_data['department'].add(DEPARTMENT.ADMINISTRATIVE_STAFF)
         await query.message.answer(user_data)
 
+#------------------------------------------------------------------------------------
 
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Закончить выбор'), state=AuthState.department)
 async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
