@@ -23,8 +23,8 @@ class SelectionAlgorithm:
             user_department = set(user.department)
             user_favorite_coffee = set(user.coffee_type)
 
-            cnt_department = len(main_user_department & user_department)
-            cnt_favorite_coffee = len(main_user_favorite_coffee & user_favorite_coffee)
+            cnt_department = len(main_user_department & user_department) * 10
+            cnt_favorite_coffee = len(main_user_favorite_coffee & user_favorite_coffee) * 5
             all_users_new.append([user, cnt_department + cnt_favorite_coffee])
 
         if all_users:
