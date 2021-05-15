@@ -1,10 +1,12 @@
+import datetime
+
 from constants import *
 
 
 class CVInterface:
     def __init__(self, data=None, id=None, tg_id=None, tg_is_bot=None, tg_first_name=None, tg_username=None,
-                 tg_language_code=None, real_name=None, coffee_type=None, department=None,
-                 family_status=None, gender=None, preferred_gender=None, about=None, register_date=None, interests=[],
+                 tg_language_code=None, real_name='', coffee_type=[], department=[],
+                 family_status=0, gender=0, preferred_gender=0, about='', register_date=datetime.datetime.now(), interests=[],
                  rating=5.0):
 
         self.id = id
