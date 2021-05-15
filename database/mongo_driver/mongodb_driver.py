@@ -1,4 +1,4 @@
-from mongo_driver.db_driver_interface import DbDriverInterface
+from database.db_driver_interface import DbDriverInterface
 from pymongo import MongoClient
 
 class MongoDBDriver(DbDriverInterface):
