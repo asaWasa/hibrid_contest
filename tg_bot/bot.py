@@ -106,8 +106,8 @@ async def callback_button_ristretto(query: types.CallbackQuery, state: FSMContex
     async with state.proxy() as user_data:
         try:
             if COFFEE.RISTRETTO in user_data['coffee']:
-                user_data['coffee'].pop(COFFEE.RISTRETTO)
-            elif user_data['coffee']:
+                user_data['coffee'].remove(COFFEE.RISTRETTO)
+            else:
                 user_data['coffee'].add(COFFEE.RISTRETTO)
         except:
             user_data['coffee'] = set()
@@ -126,8 +126,8 @@ async def callback_button_espresso(query: types.CallbackQuery, state: FSMContext
     async with state.proxy() as user_data:
         try:
             if COFFEE.ESPRESSO in user_data['coffee']:
-                user_data['coffee'].pop(COFFEE.ESPRESSO)
-            elif user_data['coffee']:
+                user_data['coffee'].remove(COFFEE.ESPRESSO)
+            else:
                 user_data['coffee'].add(COFFEE.ESPRESSO)
         except:
             user_data['coffee'] = set()
@@ -139,8 +139,8 @@ async def callback_button_americano(query: types.CallbackQuery, state: FSMContex
     async with state.proxy() as user_data:
         try:
             if COFFEE.AMERICANO in user_data['coffee']:
-                user_data['coffee'].pop(COFFEE.AMERICANO)
-            elif user_data['coffee']:
+                user_data['coffee'].remove(COFFEE.AMERICANO)
+            else:
                 user_data['coffee'].add(COFFEE.AMERICANO)
         except:
             user_data['coffee'] = set()
@@ -153,8 +153,8 @@ async def callback_button_double_espresso(query: types.CallbackQuery, state: FSM
     async with state.proxy() as user_data:
         try:
             if COFFEE.DOUBLE_ESPRESSO in user_data['coffee']:
-                user_data['coffee'].pop(COFFEE.DOUBLE_ESPRESSO)
-            elif user_data['coffee']:
+                user_data['coffee'].remove(COFFEE.DOUBLE_ESPRESSO)
+            else:
                 user_data['coffee'].add(COFFEE.DOUBLE_ESPRESSO)
         except:
             user_data['coffee'] = set()
@@ -167,8 +167,8 @@ async def callback_button_kapucino(query: types.CallbackQuery, state: FSMContext
     async with state.proxy() as user_data:
         try:
             if COFFEE.KAPUCINO in user_data['coffee']:
-                user_data['coffee'].pop(COFFEE.KAPUCINO)
-            elif user_data['coffee']:
+                user_data['coffee'].remove(COFFEE.KAPUCINO)
+            else:
                 user_data['coffee'].add(COFFEE.KAPUCINO)
         except:
             user_data['coffee'] = set()
@@ -180,8 +180,8 @@ async def callback_button_latte(query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as user_data:
         try:
             if COFFEE.LATTE in user_data['coffee']:
-                user_data['coffee'].pop(COFFEE.LATTE)
-            elif user_data['coffee']:
+                user_data['coffee'].remove(COFFEE.LATTE)
+            else:
                 user_data['coffee'].add(COFFEE.LATTE)
         except:
             user_data['coffee'] = set()
@@ -194,8 +194,8 @@ async def callback_button_kakao(query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as user_data:
         try:
             if COFFEE.KAKAO in user_data['coffee']:
-                user_data['coffee'].pop(COFFEE.KAKAO)
-            elif user_data['coffee']:
+                user_data['coffee'].remove(COFFEE.KAKAO)
+            else:
                 user_data['coffee'].add(COFFEE.KAKAO)
         except:
             user_data['coffee'] = set()
@@ -208,13 +208,12 @@ async def callback_button_marshmello(query: types.CallbackQuery, state: FSMConte
     async with state.proxy() as user_data:
         try:
             if COFFEE.MARSHMELLO in user_data['coffee']:
-                user_data['coffee'].pop(COFFEE.MARSHMELLO)
-            elif user_data['coffee']:
+                user_data['coffee'].remove(COFFEE.MARSHMELLO)
+            else:
                 user_data['coffee'].add(COFFEE.MARSHMELLO)
         except:
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.MARSHMELLO)
-
 
 
 @dp.message_handler(state=AuthState.coffee_type)
@@ -251,8 +250,8 @@ async def callback_button_marketing(query: types.CallbackQuery, state: FSMContex
     async with state.proxy() as user_data:
         try:
             if DEPARTMENT.MARKETING in user_data['department']:
-                user_data['department'].pop(DEPARTMENT.MARKETING)
-            elif user_data['department']:
+                user_data['department'].remove(DEPARTMENT.MARKETING)
+            else:
                 user_data['department'].add(DEPARTMENT.MARKETING)
         except:
             user_data['department'] = set()
@@ -270,8 +269,8 @@ async def callback_button_finance(query: types.CallbackQuery, state: FSMContext)
     async with state.proxy() as user_data:
         try:
             if DEPARTMENT.FINANCE in user_data['department']:
-                user_data['department'].pop(DEPARTMENT.FINANCE)
-            elif user_data['department']:
+                user_data['department'].remove(DEPARTMENT.FINANCE)
+            else:
                 user_data['department'].add(DEPARTMENT.FINANCE)
         except:
             user_data['department'] = set()
@@ -289,8 +288,8 @@ async def callback_button_dev_test(query: types.CallbackQuery, state: FSMContext
     async with state.proxy() as user_data:
         try:
             if DEPARTMENT.DEV_AND_TESTING in user_data['department']:
-                user_data['department'].pop(DEPARTMENT.DEV_AND_TESTING)
-            elif user_data['department']:
+                user_data['department'].remove(DEPARTMENT.DEV_AND_TESTING)
+            else:
                 user_data['department'].add(DEPARTMENT.DEV_AND_TESTING)
         except:
             user_data['department'] = set()
@@ -308,8 +307,8 @@ async def callback_button_media_bayer(query: types.CallbackQuery, state: FSMCont
     async with state.proxy() as user_data:
         try:
             if DEPARTMENT.MEDIA_BAYER in user_data['department']:
-                user_data['department'].pop(DEPARTMENT.MEDIA_BAYER)
-            elif user_data['department']:
+                user_data['department'].remove(DEPARTMENT.MEDIA_BAYER)
+            else:
                 user_data['department'].add(DEPARTMENT.MEDIA_BAYER)
         except:
             user_data['department'] = set()
@@ -326,8 +325,8 @@ async def callback_button_sales(query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as user_data:
         try:
             if DEPARTMENT.SALES in user_data['department']:
-                user_data['department'].pop(DEPARTMENT.SALES)
-            elif user_data['department']:
+                user_data['department'].remove(DEPARTMENT.SALES)
+            else:
                 user_data['department'].add(DEPARTMENT.SALES)
         except:
             user_data['department'] = set()
@@ -338,13 +337,14 @@ async def callback_button_sales(query: types.CallbackQuery, state: FSMContext):
             department_list += DEPARTMENT.get_string(department) + ' '
         await query.message.answer(department_list)
 
+
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Partner relations'), state=AuthState.department)
 async def callback_button_partner_rel(query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as user_data:
         try:
             if DEPARTMENT.PARTNER_RELATIONS in user_data['department']:
-                user_data['department'].pop(DEPARTMENT.PARTNER_RELATIONS)
-            elif user_data['department']:
+                user_data['department'].remove(DEPARTMENT.PARTNER_RELATIONS)
+            else:
                 user_data['department'].add(DEPARTMENT.PARTNER_RELATIONS)
         except:
             user_data['department'] = set()
@@ -361,8 +361,8 @@ async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as user_data:
         try:
             if DEPARTMENT.MEDIA in user_data['department']:
-                user_data['department'].pop(DEPARTMENT.MEDIA)
-            elif user_data['department']:
+                user_data['department'].remove(DEPARTMENT.MEDIA)
+            else:
                 user_data['department'].add(DEPARTMENT.MEDIA)
         except:
             user_data['department'] = set()
@@ -379,8 +379,8 @@ async def callback_button_administrative_stuff(query: types.CallbackQuery, state
     async with state.proxy() as user_data:
         try:
             if DEPARTMENT.ADMINISTRATIVE_STAFF in user_data['department']:
-                user_data['department'].pop(DEPARTMENT.ADMINISTRATIVE_STAFF)
-            elif user_data['department']:
+                user_data['department'].remove(DEPARTMENT.ADMINISTRATIVE_STAFF)
+            else:
                 user_data['department'].add(DEPARTMENT.ADMINISTRATIVE_STAFF)
         except:
             user_data['department'] = set()
