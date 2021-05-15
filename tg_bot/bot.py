@@ -9,6 +9,8 @@ import aiogram.utils.markdown as md
 from constants import *
 from _algorithm.selection_algorithm import *
 import time
+import datetime
+
 
 def main_keyboard(idx):
     cnt_meetings = db_meetings.find_one('tg_id', idx)
@@ -30,6 +32,7 @@ def reply_submit_keyboard():
     markup.add('Через 5 часов')
     markup.add('Через 7 часа')
     markup.add('Через 1 день')
+    markup.add('Назад')
     return markup
 
 
@@ -42,6 +45,7 @@ def about_keyboard():
 def reply_selection_keyboard():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
     markup.add('Да', '->')
+    markup.add('Назад')
     return markup
 
 
@@ -505,7 +509,7 @@ async def get_random_user(message: types.Message, state: FSMContext):
                                       )
                               )
         async with state.proxy() as user_data:
-            user_data['select_user'] = user.id
+            user_data['select_user'] = user.tg_id
         break
 
     await MainState.selection.set()
@@ -522,11 +526,87 @@ async def get_random_user(message: types.Message, state: FSMContext):
 async def button_media(message: types.Message, state: FSMContext):
     async with state.proxy() as user_data:
         select_user = user_data['select_user']
-
-    db_meetings.push({'tg_id': message.from_user.id,
-                      'meetings': {'target': select_user,
-                                    'time':  datetime.datetime.fromtimestamp(time.time() // 1000 + 3600)}})
+    user = db_meetings.find_one('tg_id', select_user)
+    if user is None:
+        db_meetings.push({'tg_id': select_user,
+                               'meetings': [{'target': message.from_user.id,
+                                            'time':  datetime.datetime.fromtimestamp(time.time() + 3600)}]})
+    else:
+        user['meetings'].append({'target': message.from_user.id,
+                                            'time':  datetime.datetime.fromtimestamp(time.time() + 3600)})
+        db_meetings.update_one(user)
     await message.answer('Встреча записана!')
+
+
+@dp.message_handler(Text(equals='Через 2 часa'), state=MainState.set_time)
+async def button_media(message: types.Message, state: FSMContext):
+    async with state.proxy() as user_data:
+        select_user = user_data['select_user']
+    user = db_meetings.find_one('tg_id', select_user)
+    if user is None:
+        db_meetings.push({'tg_id': select_user,
+                               'meetings': [{'target': message.from_user.id,
+                                            'time':  datetime.datetime.fromtimestamp(time.time() + 7200)}]})
+    else:
+        user['meetings'].append({'target': message.from_user.id,
+                                            'time':  datetime.datetime.fromtimestamp(time.time() + 7200)})
+        db_meetings.update_one(user)
+    await message.answer('Встреча записана!')
+
+
+@dp.message_handler(Text(equals='Через 5 часов'), state=MainState.set_time)
+async def button_media(message: types.Message, state: FSMContext):
+    async with state.proxy() as user_data:
+        select_user = user_data['select_user']
+    user = db_meetings.find_one('tg_id', select_user)
+    if user is None:
+        db_meetings.push({'tg_id': select_user,
+                               'meetings': [{'target': message.from_user.id,
+                                            'time':  datetime.datetime.fromtimestamp(time.time() + 18000)}]})
+    else:
+        user['meetings'].append({'target': message.from_user.id,
+                                            'time':  datetime.datetime.fromtimestamp(time.time() + 18000)})
+        db_meetings.update_one(user)
+    await message.answer('Встреча записана!')
+
+
+@dp.message_handler(Text(equals='Через 7 часов'), state=MainState.set_time)
+async def button_media(message: types.Message, state: FSMContext):
+    async with state.proxy() as user_data:
+        select_user = user_data['select_user']
+    user = db_meetings.find_one('tg_id', select_user)
+    if user is None:
+        db_meetings.push({'tg_id': select_user,
+                               'meetings': [{'target': message.from_user.id,
+                                            'time':  datetime.datetime.fromtimestamp(time.time() + 3600)}]})
+    else:
+        user['meetings'].append({'target': message.from_user.id,
+                                            'time':  datetime.datetime.fromtimestamp(time.time() + 3600)})
+        db_meetings.update_one(user)
+    await message.answer('Встреча записана!')
+
+
+@dp.message_handler(Text(equals='Через 1 день'), state=MainState.set_time)
+async def button_media(message: types.Message, state: FSMContext):
+    async with state.proxy() as user_data:
+        select_user = user_data['select_user']
+    user = db_meetings.find_one('tg_id', select_user)
+    if user is None:
+        db_meetings.push({'tg_id': select_user,
+                          'meetings': [{'target': message.from_user.id,
+                                        'time': datetime.datetime.fromtimestamp(time.time() + 86400)}]})
+    else:
+        user['meetings'].append({'target': message.from_user.id,
+                                 'time': datetime.datetime.fromtimestamp(time.time() + 86400)})
+        db_meetings.update_one(user)
+    await message.answer('Встреча записана!')
+
+
+@dp.message_handler(Text(equals='Назад'), state='*')
+async def button_media(message: types.Message, state: FSMContext):
+    await MainState.main.set()
+    markup = main_keyboard(message.from_user.id)
+    await message.answer('<-', reply_markup=markup)
 
 
 @dp.message_handler(Text(equals='->'), state=MainState.selection)

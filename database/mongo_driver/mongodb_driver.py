@@ -43,8 +43,8 @@ class MongoDBDriver(DbDriverInterface):
     def update_one(self, item=None):
         try:
             self.__prepare()
-            item_id = item['id']
-            self.collection.update_one({'id': item_id}, {'$set': item}, upsert=True)
+            item_id = item['tg_id']
+            self.collection.update_one({'tg_id': item_id}, {'$set': item}, upsert=True)
         except Exception as e:
             print(e)
 
