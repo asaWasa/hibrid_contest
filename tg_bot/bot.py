@@ -102,7 +102,6 @@ async def callback_button_ristretto(query: types.CallbackQuery, state: FSMContex
             user_data['coffee'].add(COFFEE.RISTRETTO)
         await query.message.answer(user_data)
 
-        await query.message.answer(user_data)
 
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Закончить выбор'), state=AuthState.coffee_type)
@@ -359,22 +358,25 @@ async def callback_button_administrative_stuff(query: types.CallbackQuery, state
 
 #------------------------------------------------------------------------------------
 
+
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Закончить выбор'), state=AuthState.department)
 async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
-    markup = about_keyboard()
-    await query.message.answer('Напишите о себе:', reply_markup=markup)
+    await query.message.answer('Напишите о себе:')
     await AuthState.about.set()
 
 
 @dp.message_handler(state=AuthState.about)
 async def auth_dep(message: types.Message, state: FSMContext):
+    about = message.text
     _id = get_id()
     data = dict()
     data['id'] = _id
     async with state.proxy() as user_data:
-        data["coffee_type"] = user_data['coffee_type']
+        if about:
+            data['about'] = about
+        data["coffee_type"] = user_data['coffee']
         data["real_name"] = user_data['name']
-        data['deportment'] = user_data['deportment']
+        data['department'] = user_data['department']
         data["tg_id"] = user_data['tg_data']['id']
         data["tg_is_bot"] = user_data['tg_data']['is_bot']
         data["tg_first_name"] = user_data['tg_data']['id']
