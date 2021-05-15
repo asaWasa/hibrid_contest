@@ -36,19 +36,19 @@ class SelectionAlgorithm:
             for user in all_users:
                 if user[1] != last:
                     last = user[1]
-                    res = [user, user.rating]
+                    res = [user, user[0].rating]
                     cnt_res.append([res])
                 else:
-                    cnt_res[-1].append([user, user.rating])
+                    cnt_res[-1].append([user, user[0].rating])
 
             res = []
             for cnt in cnt_res:
                 cnt.sort(key= lambda x: x[1], reverse=True)
                 for user in cnt:
-                    res.append(user)
+                    res.append(user[0][0])
             return res
         else:
-            return None
+            return []
 
 
 

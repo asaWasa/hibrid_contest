@@ -386,15 +386,16 @@ def add_list_elem(object, key, element):
 async def get_random_user(message: types.Message, state: FSMContext):
     markup = reply_selection_keyboard()
     _object = SelectionAlgorithm()
+    await message.answer('Пригласить на кофе?', reply_markup=markup)
     for user in _object.get_selection(CV.from_dict(db_users.find_one('tg_id', message.from_user.id))):
-        bot.send_message(message.chat.id,
-                         md.text(
-                             md.text("Меня зовут: ".format(user.name)),
-                             md.text("Мой любимый кофе: ".format(user.coffee_type)),
-                             md.text("Я работаю в отделax".format(user.department)),
-                         )
-                         )
-    await message.answer('В этом разделе вы сможете выбрать собеседника', reply_markup=markup)
+        await bot.send_message(message.chat.id,
+                               md.text(
+                                    md.text("Меня зовут:", user.real_name +'\n'),
+                                    md.text("Мой любимый кофе:", str(user.coffee_type) + '\n'),
+                                    md.text("Я работаю в отделе(-ax):", str(user.department) + '\n'),
+                                      )
+                              )
+
     await MainState.selection.set()
 
 
