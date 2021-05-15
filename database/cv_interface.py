@@ -1,9 +1,12 @@
 from constants import *
 
+
 class CVInterface:
-    def __init__(self, id, tg_id, tg_is_bot, tg_first_name, tg_username,
-                 tg_language_code, real_name, favorite_coffee, work_department,
-                 family_status, gender, preferred_gender, about, register_date, interests=[], rating=5.0):
+    def __init__(self, data=None, id=None, tg_id=None, tg_is_bot=None, tg_first_name=None, tg_username=None,
+                 tg_language_code=None, real_name=None, coffee_type=None, work_department=None,
+                 family_status=None, gender=None, preferred_gender=None, about=None, register_date=None, interests=[],
+                 rating=5.0):
+
         self.id = id
         self.tg_id = tg_id
         self.tg_is_bot = tg_is_bot
@@ -11,7 +14,7 @@ class CVInterface:
         self.tg_username = tg_username
         self.tg_language_code = tg_language_code
         self.real_name = real_name
-        self.favorite_coffee = favorite_coffee
+        self.favorite_coffee = coffee_type
         self.work_department = work_department
         self.family_status = family_status
         self.gender = gender
@@ -20,6 +23,16 @@ class CVInterface:
         self.register_date = register_date
         self.interests = interests
         self.rating = rating
+
+        if data is not None:
+            self.__dict__.update(data)
+            return
+
+    def __repr__(self):
+        return '{}'.format(self.id)
+
+    def __str__(self):
+        return '{}'.format(self.id)
 
     def to_dict(self):
         res = dict()

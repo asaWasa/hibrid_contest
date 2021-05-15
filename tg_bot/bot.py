@@ -4,6 +4,7 @@ from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 from aiogram.utils import executor
+from database.cv_interface import CVInterface as CV
 
 
 def main_key_board():
@@ -32,14 +33,16 @@ class MainState(StatesGroup):
 class AuthState(StatesGroup):
     name = State()
     department = State()
-    coffe_type = State()
+    coffee_type = State()
 
 
 @dp.message_handler(commands='start', state="*")
-async def cmd_start(message: types.Message):
+async def cmd_start(message: types.Message, state: FSMContext):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
     # todo проверить что человек в базе
     user = message.from_user.get_current()
+    async with state.proxy() as user_data:
+        user_data['tg_data'] = user
     if user_in_base(user.id):
         markup = main_key_board()
         await message.answer("Привет!, {}".format(str(user)), reply_markup=markup)
@@ -52,10 +55,10 @@ async def cmd_start(message: types.Message):
 async def cmd_auth(message: types.Message, state: FSMContext):
     await message.answer("Расскажи о себе")
     await message.answer('Какой кофе любишь?')
-    await AuthState.coffe_type.set()
+    await AuthState.coffee_type.set()
 
 
-@dp.message_handler(state=AuthState.coffe_type)
+@dp.message_handler(state=AuthState.coffee_type)
 async def auth_name(message: types.Message, state: FSMContext):
     coffee_type = message.text
     async with state.proxy() as user_data:
@@ -66,9 +69,9 @@ async def auth_name(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=AuthState.name)
 async def auth_name(message: types.Message, state: FSMContext):
-    coffee_type = message.text
+    name = message.text
     async with state.proxy() as user_data:
-        user_data['coffee_type'] = coffee_type
+        user_data['name'] = name
     await message.answer('Как называется твой отдел?')
     await AuthState.department.set()
 
@@ -79,11 +82,17 @@ async def auth_dep(message: types.Message, state: FSMContext):
     data["department"] = message.text
     async with state.proxy() as user_data:
         data["coffee_type"] = user_data['coffee_type']
-        data["name"] = user_data['name']
+        data["real_name"] = user_data['name']
+        data["tg_id"] = user_data['tg_data']['id']
+        data["tg_is_bot"] = user_data['tg_data']['is_bot']
+        data["tg_first_name"] = user_data['tg_data']['id']
 
-    CV()
-    await message.answer('Профиль успешно создан')
-
+        data["tg_first_name"] = user_data['tg_data']['first_name']
+        data["tg_username"] = user_data['tg_data']['username']
+        data["tg_language_code"] = user_data['tg_data']['language_code']
+    await message.answer(CV(data).to_dict())
+    await message.answer('Профиль успешно создан', reply_markup=main_key_board())
+    await MainState.main.set()
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
