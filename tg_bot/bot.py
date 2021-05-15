@@ -473,23 +473,10 @@ async def get_random_user(message: types.Message, state: FSMContext):
 
 @dp.message_handler(Text(equals='->'), state=MainState.selection)
 async def get_random_user(message: types.Message, state: FSMContext):
-    await MainState.selection.set()
-
+    await MainState.main.set()
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
     markup.add('Предложить собеседника')
     await message.answer('Предложить нового собеседника?', reply_markup=markup)
-
-# @dp.message_handler(state=MainState.selection)
-# async def get_random_user(message: types.Message, state: FSMContext):
-#     user_data = get_random_user()
-#     bot.send_message(message.chat.id,
-#                      md.text(
-#                          md.text("Меня зовут: ".format(user_data['name'])),
-#                          md.text("Мой любимый кофе: ".format(user_data['coffee_type'])),
-#                          md.text("Я работаю в отделе".format(user_data['department'])),
-#                             )
-#                      )
-#
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
