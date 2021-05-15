@@ -118,6 +118,11 @@ async def callback_button_ristretto(query: types.CallbackQuery, state: FSMContex
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.RISTRETTO)
 
+        coffee_list = 'Вы выбрали: '
+        for coffee in list(user_data['coffee']):
+            coffee_list += COFFEE.get_string(coffee) + ' '
+        await query.message.answer(coffee_list)
+
 
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Закончить выбор'), state=AuthState.coffee_type)
@@ -140,7 +145,7 @@ async def callback_button_espresso(query: types.CallbackQuery, state: FSMContext
 
         coffee_list = 'Вы выбрали: '
         for coffee in list(user_data['coffee']):
-            coffee_list += DEPARTMENT.get_string(coffee) + ' '
+            coffee_list += COFFEE.get_string(coffee) + ' '
         await query.message.answer(coffee_list)
 
 
@@ -158,7 +163,7 @@ async def callback_button_americano(query: types.CallbackQuery, state: FSMContex
 
         coffee_list = 'Вы выбрали: '
         for coffee in list(user_data['coffee']):
-            coffee_list += DEPARTMENT.get_string(coffee) + ' '
+            coffee_list += COFFEE.get_string(coffee) + ' '
         await query.message.answer(coffee_list)
 
 
@@ -177,7 +182,7 @@ async def callback_button_double_espresso(query: types.CallbackQuery, state: FSM
 
         coffee_list = 'Вы выбрали: '
         for coffee in list(user_data['coffee']):
-            coffee_list += DEPARTMENT.get_string(coffee) + ' '
+            coffee_list += COFFEE.get_string(coffee) + ' '
         await query.message.answer(coffee_list)
 
 
@@ -196,7 +201,7 @@ async def callback_button_kapucino(query: types.CallbackQuery, state: FSMContext
 
         coffee_list = 'Вы выбрали: '
         for coffee in list(user_data['coffee']):
-            coffee_list += DEPARTMENT.get_string(coffee) + ' '
+            coffee_list += COFFEE.get_string(coffee) + ' '
         await query.message.answer(coffee_list)
 
 
@@ -214,7 +219,7 @@ async def callback_button_latte(query: types.CallbackQuery, state: FSMContext):
 
         coffee_list = 'Вы выбрали: '
         for coffee in list(user_data['coffee']):
-            coffee_list += DEPARTMENT.get_string(coffee) + ' '
+            coffee_list += COFFEE.get_string(coffee) + ' '
         await query.message.answer(coffee_list)
 
 
@@ -233,7 +238,7 @@ async def callback_button_kakao(query: types.CallbackQuery, state: FSMContext):
 
         coffee_list = 'Вы выбрали: '
         for coffee in list(user_data['coffee']):
-            coffee_list += DEPARTMENT.get_string(coffee) + ' '
+            coffee_list += COFFEE.get_string(coffee) + ' '
         await query.message.answer(coffee_list)
 
 
@@ -252,7 +257,7 @@ async def callback_button_marshmello(query: types.CallbackQuery, state: FSMConte
 
         coffee_list = 'Вы выбрали: '
         for coffee in list(user_data['coffee']):
-            coffee_list += DEPARTMENT.get_string(coffee) + ' '
+            coffee_list += COFFEE.get_string(coffee) + ' '
         await query.message.answer(coffee_list)
 
 
