@@ -246,6 +246,11 @@ async def callback_button_marketing(query: types.CallbackQuery, state: FSMContex
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.MARKETING)
 
+        department_list = 'Вы выбрали: '
+        for department in list(user_data['department']):
+            department_list += DEPARTMENT.get_string(department) + ' '
+        await query.message.answer(department_list)
+
 
 
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Finance'), state=AuthState.department)
@@ -259,6 +264,11 @@ async def callback_button_finance(query: types.CallbackQuery, state: FSMContext)
         except:
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.FINANCE)
+
+        department_list = 'Вы выбрали: '
+        for department in list(user_data['department']):
+            department_list += DEPARTMENT.get_string(department) + ' '
+        await query.message.answer(department_list)
 
 
 
@@ -274,6 +284,11 @@ async def callback_button_dev_test(query: types.CallbackQuery, state: FSMContext
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.DEV_AND_TESTING)
 
+        department_list = 'Вы выбрали: '
+        for department in list(user_data['department']):
+            department_list += DEPARTMENT.get_string(department) + ' '
+        await query.message.answer(department_list)
+
 
 
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Media_Bayer'), state=AuthState.department)
@@ -288,6 +303,11 @@ async def callback_button_media_bayer(query: types.CallbackQuery, state: FSMCont
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.MEDIA_BAYER)
 
+        department_list = 'Вы выбрали: '
+        for department in list(user_data['department']):
+            department_list += DEPARTMENT.get_string(department) + ' '
+        await query.message.answer(department_list)
+
 
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Sales'), state=AuthState.department)
 async def callback_button_sales(query: types.CallbackQuery, state: FSMContext):
@@ -301,6 +321,11 @@ async def callback_button_sales(query: types.CallbackQuery, state: FSMContext):
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.SALES)
 
+        department_list = 'Вы выбрали: '
+        for department in list(user_data['department']):
+            department_list += DEPARTMENT.get_string(department) + ' '
+        await query.message.answer(department_list)
+
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Partner relations'), state=AuthState.department)
 async def callback_button_partner_rel(query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as user_data:
@@ -312,6 +337,11 @@ async def callback_button_partner_rel(query: types.CallbackQuery, state: FSMCont
         except:
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.PARTNER_RELATIONS)
+
+        department_list = 'Вы выбрали: '
+        for department in list(user_data['department']):
+            department_list += DEPARTMENT.get_string(department) + ' '
+        await query.message.answer(department_list)
 
 
 @dp.callback_query_handler(Text(equals='add_dep_' + "Media"), state=AuthState.department)
@@ -326,6 +356,11 @@ async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.MEDIA)
 
+        department_list = 'Вы выбрали: '
+        for department in list(user_data['department']):
+            department_list += DEPARTMENT.get_string(department) + ' '
+        await query.message.answer(department_list)
+
 
 @dp.callback_query_handler(Text(equals='add_dep_' + "Administrative staff"), state=AuthState.department)
 async def callback_button_administrative_stuff(query: types.CallbackQuery, state: FSMContext):
@@ -338,6 +373,11 @@ async def callback_button_administrative_stuff(query: types.CallbackQuery, state
         except:
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.ADMINISTRATIVE_STAFF)
+
+        department_list = 'Вы выбрали: '
+        for department in list(user_data['department']):
+            department_list += DEPARTMENT.get_string(department) + ' '
+        await query.message.answer(department_list)
 
 #------------------------------------------------------------------------------------
 
