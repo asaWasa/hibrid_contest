@@ -14,3 +14,5 @@ storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
 db_users = MongoDBDriver(db_name=USERS_DB.DB, col_name=USERS_DB.COLLECTION)
+
+db_meetings = MongoDBDriver(db_name=USERS_DB.DB, col_name=USERS_DB.MEETINGS)

@@ -1,6 +1,8 @@
 class USERS_DB:
     DB = 'coffee_users'
     COLLECTION = 'users'
+    MEETINGS = 'users_meetings'
+
 
 class DB_FIELDS:
     ID = 'id'
