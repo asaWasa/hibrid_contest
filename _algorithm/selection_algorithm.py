@@ -29,7 +29,7 @@ class SelectionAlgorithm:
 
         if all_users:
             all_users_new.sort(key=lambda x: x[1], reverse=True)
-
+        all_users = all_users_new
         if all_users:
             cnt_res = [[]]
             last = all_users[0][1]

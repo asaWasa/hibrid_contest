@@ -7,7 +7,7 @@ from aiogram.utils import executor
 from database.cv_interface import CVInterface as CV
 import aiogram.utils.markdown as md
 from constants import *
-
+from _algorithm.selection_algorithm import *
 
 def main_keyboard():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
@@ -66,7 +66,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
         user_data['tg_data'] = user
     if user_in_base(user.id):
         markup = main_keyboard()
-        await message.answer("Привет!, {}".format(str(user.first_name)), reply_markup=markup)
+        await message.answer("Привет, {}!".format(str(user.first_name)), reply_markup=markup)
         await MainState.main.set()
     else:
         markup.add('Регистрация')
@@ -105,7 +105,6 @@ async def callback_button_ristretto(query: types.CallbackQuery, state: FSMContex
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Закончить выбор'), state=AuthState.coffee_type)
 async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
-    await query.message.answer('Напишите о себе:')
     await query.message.answer('Как тебя зовут?')
     await AuthState.name.set()
 
@@ -358,9 +357,9 @@ async def auth_dep(message: types.Message, state: FSMContext):
     async with state.proxy() as user_data:
         if about:
             data['about'] = about
-        data["coffee_type"] = user_data['coffee']
+        data["coffee_type"] = list(user_data['coffee'])
         data["real_name"] = user_data['name']
-        data['department'] = user_data['department']
+        data['department'] = list(user_data['department'])
         data["tg_id"] = user_data['tg_data']['id']
         data["tg_is_bot"] = user_data['tg_data']['is_bot']
         data["tg_first_name"] = user_data['tg_data']['id']
@@ -386,21 +385,30 @@ def add_list_elem(object, key, element):
 @dp.message_handler(Text(equals='Предложить собеседника'), state=MainState.main)
 async def get_random_user(message: types.Message, state: FSMContext):
     markup = reply_selection_keyboard()
+    _object = SelectionAlgorithm()
+    for user in _object.get_selection(CV.from_dict(db_users.find_one('tg_id', message.from_user.id))):
+        bot.send_message(message.chat.id,
+                         md.text(
+                             md.text("Меня зовут: ".format(user.name)),
+                             md.text("Мой любимый кофе: ".format(user.coffee_type)),
+                             md.text("Я работаю в отделax".format(user.department)),
+                         )
+                         )
     await message.answer('В этом разделе вы сможете выбрать собеседника', reply_markup=markup)
     await MainState.selection.set()
 
 
-@dp.message_handler(state=MainState.selection)
-async def get_random_user(message: types.Message, state: FSMContext):
-    user_data = get_random_user()
-    bot.send_message(message.chat.id,
-                     md.text(
-                         md.text("Меня зовут: ".format(user_data['name'])),
-                         md.text("Мой любимый кофе: ".format(user_data['coffee_type'])),
-                         md.text("Я работаю в отделе".format(user_data['department'])),
-                            )
-                     )
-
+# @dp.message_handler(state=MainState.selection)
+# async def get_random_user(message: types.Message, state: FSMContext):
+#     user_data = get_random_user()
+#     bot.send_message(message.chat.id,
+#                      md.text(
+#                          md.text("Меня зовут: ".format(user_data['name'])),
+#                          md.text("Мой любимый кофе: ".format(user_data['coffee_type'])),
+#                          md.text("Я работаю в отделе".format(user_data['department'])),
+#                             )
+#                      )
+#
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)

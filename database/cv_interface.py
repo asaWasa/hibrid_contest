@@ -72,6 +72,6 @@ class CVInterface:
         register_date = data_dict[DB_FIELDS.REGISTER_DATE]
         interests = data_dict[DB_FIELDS.INTERESTS]
         rating = data_dict[DB_FIELDS.RATING]
-        return cls(id, tg_id, tg_is_bot, tg_first_name, tg_username,
+        return cls(data_dict, id, tg_id, tg_is_bot, tg_first_name, tg_username,
                  tg_language_code, real_name, coffee_type, department,
                  family_status, gender, preferred_gender, about, register_date, interests, rating)
