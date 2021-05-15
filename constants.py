@@ -15,4 +15,8 @@ class DB_FIELDS:
     FAMILY_STATUS = 'family_status'
     GENDER = 'gender'
     PREFERRED_GENDER = 'preferred_gender'
+    ABOUT = 'about'
     INTERESTS = 'interests'
+
+class INTERESTS:
+    pass
