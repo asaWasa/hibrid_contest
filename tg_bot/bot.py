@@ -1,5 +1,3 @@
-import datetime
-
 from tg_bot.loader import dp, bot, db_users, db_meetings
 from aiogram import types
 from aiogram.dispatcher.filters import Text
@@ -12,10 +10,15 @@ from constants import *
 from _algorithm.selection_algorithm import *
 import time
 
-def main_keyboard():
+def main_keyboard(idx):
+    cnt_meetings = db_meetings.find_one('tg_id', idx)
+    if cnt_meetings is None:
+        cnt_meetings = 0
+    else:
+        cnt_meetings = len(cnt_meetings['meetings'])
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
     markup.add('Предложить собеседника')
-    markup.add('Посмотреть встречи')
+    markup.add(f'Посмотреть встречи({cnt_meetings})')
     markup.add('Заполнить профиль')
     return markup
 
@@ -81,7 +84,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
     async with state.proxy() as user_data:
         user_data['tg_data'] = user
     if user_in_base(user.id):
-        markup = main_keyboard()
+        markup = main_keyboard(message.from_user.id)
         await message.answer("Привет, {}!".format(str(user.first_name)), reply_markup=markup)
         await MainState.main.set()
     else:
@@ -137,6 +140,11 @@ async def callback_button_espresso(query: types.CallbackQuery, state: FSMContext
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.ESPRESSO)
 
+        coffee_list = 'Вы выбрали: '
+        for coffee in list(user_data['coffee']):
+            coffee_list += DEPARTMENT.get_string(coffee) + ' '
+        await query.message.answer(coffee_list)
+
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Americano'), state=AuthState.coffee_type)
 async def callback_button_americano(query: types.CallbackQuery, state: FSMContext):
@@ -149,6 +157,11 @@ async def callback_button_americano(query: types.CallbackQuery, state: FSMContex
         except:
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.AMERICANO)
+
+        coffee_list = 'Вы выбрали: '
+        for coffee in list(user_data['coffee']):
+            coffee_list += DEPARTMENT.get_string(coffee) + ' '
+        await query.message.answer(coffee_list)
 
 
 
@@ -164,6 +177,11 @@ async def callback_button_double_espresso(query: types.CallbackQuery, state: FSM
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.DOUBLE_ESPRESSO)
 
+        coffee_list = 'Вы выбрали: '
+        for coffee in list(user_data['coffee']):
+            coffee_list += DEPARTMENT.get_string(coffee) + ' '
+        await query.message.answer(coffee_list)
+
 
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Kapucino'), state=AuthState.coffee_type)
@@ -178,6 +196,11 @@ async def callback_button_kapucino(query: types.CallbackQuery, state: FSMContext
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.KAPUCINO)
 
+        coffee_list = 'Вы выбрали: '
+        for coffee in list(user_data['coffee']):
+            coffee_list += DEPARTMENT.get_string(coffee) + ' '
+        await query.message.answer(coffee_list)
+
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Latte'), state=AuthState.coffee_type)
 async def callback_button_latte(query: types.CallbackQuery, state: FSMContext):
@@ -190,6 +213,11 @@ async def callback_button_latte(query: types.CallbackQuery, state: FSMContext):
         except:
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.LATTE)
+
+        coffee_list = 'Вы выбрали: '
+        for coffee in list(user_data['coffee']):
+            coffee_list += DEPARTMENT.get_string(coffee) + ' '
+        await query.message.answer(coffee_list)
 
 
 
@@ -205,6 +233,11 @@ async def callback_button_kakao(query: types.CallbackQuery, state: FSMContext):
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.KAKAO)
 
+        coffee_list = 'Вы выбрали: '
+        for coffee in list(user_data['coffee']):
+            coffee_list += DEPARTMENT.get_string(coffee) + ' '
+        await query.message.answer(coffee_list)
+
 
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Marshmello'), state=AuthState.coffee_type)
@@ -218,6 +251,11 @@ async def callback_button_marshmello(query: types.CallbackQuery, state: FSMConte
         except:
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.MARSHMELLO)
+
+        coffee_list = 'Вы выбрали: '
+        for coffee in list(user_data['coffee']):
+            coffee_list += DEPARTMENT.get_string(coffee) + ' '
+        await query.message.answer(coffee_list)
 
 
 @dp.message_handler(state=AuthState.coffee_type)
@@ -424,7 +462,7 @@ async def auth_dep(message: types.Message, state: FSMContext):
         data["tg_language_code"] = user_data['tg_data']['language_code']
 
     db_users.push(CV(data).to_dict())
-    await message.answer('Отлично! профиль успешно создан', reply_markup=main_keyboard())
+    await message.answer('Отлично! профиль успешно создан', reply_markup=main_keyboard(message.from_user.id))
     await MainState.main.set()
 
 
