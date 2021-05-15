@@ -18,7 +18,7 @@ def main_keyboard():
 
 def about_keyboard():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
-    markup.add('Пропустить')
+    markup.add('Закончить')
     return markup
 
 def reply_selection_keyboard():
@@ -100,12 +100,12 @@ async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
         except:
             user_data['coffee'] = set()
             user_data['coffee'].add(COFFEE.RISTRETTO)
+        await query.message.answer(user_data)
 
 
-@dp.callback_query_handler(Text(equals='add_coffee_' + 'Закончить выбор'), state=AuthState.department)
+@dp.callback_query_handler(Text(equals='add_coffee_' + 'Закончить выбор'), state=AuthState.coffee_type)
 async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
-    markup = about_keyboard()
-    await query.message.answer('Напишите о себе:', reply_markup=markup)
+    await query.message.answer('Напишите о себе:')
     await query.message.answer('Как тебя зовут?')
     await AuthState.name.set()
 
@@ -115,7 +115,7 @@ async def auth_name(message: types.Message, state: FSMContext):
     name = message.text
     async with state.proxy() as user_data:
         user_data['name'] = name
-    await message.answer('Выбери отдел в котором работаешь:')
+    await message.answer('Выбери отдел(ы) в котором работаешь:')
     await AuthState.department.set()
     departments = ['Marketing', 'Finance', 'Dev and testing',
                    'Media_Bayer', 'Sales', 'Partner relations', "Media", "Administrative staff", "Закончить выбор"]
@@ -124,11 +124,10 @@ async def auth_name(message: types.Message, state: FSMContext):
     for dep in departments:
         btns.append(types.InlineKeyboardButton("{}".format(dep), callback_data='add_dep_{}'.format(dep)))
     media.add(*btns)
-    await message.answer('Выберите отдел:', reply_markup=media)
+    await message.answer('Выберите отдел(ы):', reply_markup=media)
     await AuthState.department.set()
 
 # -----------------------------------------------------------------
-
 
 
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Marketing'), state=AuthState.department)
@@ -188,6 +187,7 @@ async def callback_button_media_bayer(query: types.CallbackQuery, state: FSMCont
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.MEDIA_BAYER)
         await query.message.answer(user_data)
+
 
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Sales'), state=AuthState.department)
 async def callback_button_sales(query: types.CallbackQuery, state: FSMContext):
@@ -251,20 +251,15 @@ async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
     await AuthState.about.set()
 
 
-@dp.message_handler(state=AuthState.department)
-async def auth_dep(message: types.Message, state: FSMContext):
-    pass
-
-
-@dp.message_handler(state=AuthState.end)
+@dp.message_handler(state=AuthState.about)
 async def auth_dep(message: types.Message, state: FSMContext):
     _id = get_id()
     data = dict()
     data['id'] = _id
-    data = add_list_elem(data, 'departament', message.text)
     async with state.proxy() as user_data:
         data["coffee_type"] = user_data['coffee_type']
         data["real_name"] = user_data['name']
+        data['deportment'] = user_data['deportment']
         data["tg_id"] = user_data['tg_data']['id']
         data["tg_is_bot"] = user_data['tg_data']['is_bot']
         data["tg_first_name"] = user_data['tg_data']['id']
@@ -273,7 +268,7 @@ async def auth_dep(message: types.Message, state: FSMContext):
         data["tg_language_code"] = user_data['tg_data']['language_code']
 
     db_users.push(CV(data).to_dict())
-    await message.answer('Профиль успешно создан', reply_markup=main_keyboard())
+    await message.answer('Отлично! профиль успешно создан', reply_markup=main_keyboard())
     await MainState.main.set()
 
 
@@ -302,8 +297,7 @@ async def get_random_user(message: types.Message, state: FSMContext):
                          md.text("Меня зовут: ".format(user_data['name'])),
                          md.text("Мой любимый кофе: ".format(user_data['coffee_type'])),
                          md.text("Я работаю в отделе".format(user_data['department'])),
-
-                     )
+                            )
                      )
 
 
