@@ -3,7 +3,7 @@ from constants import *
 
 class CVInterface:
     def __init__(self, data=None, id=None, tg_id=None, tg_is_bot=None, tg_first_name=None, tg_username=None,
-                 tg_language_code=None, real_name=None, coffee_type=None, work_department=None,
+                 tg_language_code=None, real_name=None, coffee_type=None, department=None,
                  family_status=None, gender=None, preferred_gender=None, about=None, register_date=None, interests=[],
                  rating=5.0):
 
@@ -14,8 +14,8 @@ class CVInterface:
         self.tg_username = tg_username
         self.tg_language_code = tg_language_code
         self.real_name = real_name
-        self.favorite_coffee = coffee_type
-        self.work_department = work_department
+        self.coffee_type = coffee_type
+        self.department = department
         self.family_status = family_status
         self.gender = gender
         self.preferred_gender = preferred_gender
@@ -43,8 +43,8 @@ class CVInterface:
         res[DB_FIELDS.TG_USERNAME] = self.tg_username
         res[DB_FIELDS.TG_LANGUAGE_CODE] = self.tg_language_code
         res[DB_FIELDS.REAL_NAME] = self.real_name
-        res[DB_FIELDS.FAVORITE_COFFEE] = self.favorite_coffee
-        res[DB_FIELDS.WORK_DEPARTMENT] = self.work_department
+        res[DB_FIELDS.FAVORITE_COFFEE] = self.coffee_type
+        res[DB_FIELDS.WORK_DEPARTMENT] = self.department
         res[DB_FIELDS.FAMILY_STATUS] = self.family_status
         res[DB_FIELDS.GENDER] = self.gender
         res[DB_FIELDS.PREFERRED_GENDER] = self.preferred_gender
@@ -63,8 +63,8 @@ class CVInterface:
         tg_username = data_dict[DB_FIELDS.TG_USERNAME]
         tg_language_code = data_dict[DB_FIELDS.TG_LANGUAGE_CODE]
         real_name = data_dict[DB_FIELDS.REAL_NAME]
-        favorite_coffee = data_dict[DB_FIELDS.FAVORITE_COFFEE]
-        work_department = data_dict[DB_FIELDS.WORK_DEPARTMENT]
+        coffee_type = data_dict[DB_FIELDS.FAVORITE_COFFEE]
+        department = data_dict[DB_FIELDS.WORK_DEPARTMENT]
         family_status = data_dict[DB_FIELDS.FAMILY_STATUS]
         gender = data_dict[DB_FIELDS.GENDER]
         preferred_gender = data_dict[DB_FIELDS.PREFERRED_GENDER]
@@ -73,5 +73,5 @@ class CVInterface:
         interests = data_dict[DB_FIELDS.INTERESTS]
         rating = data_dict[DB_FIELDS.RATING]
         return cls(id, tg_id, tg_is_bot, tg_first_name, tg_username,
-                 tg_language_code, real_name, favorite_coffee, work_department,
+                 tg_language_code, real_name, coffee_type, department,
                  family_status, gender, preferred_gender, about, register_date, interests, rating)

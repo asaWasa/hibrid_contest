@@ -12,14 +12,14 @@ class SelectionAlgorithm:
             all_users.append(user)
 
         all_users_new = []
-        main_user_department = set(data_user.work_department)
-        main_user_favorite_coffee = set(data_user.favorite_coffee)
+        main_user_department = set(data_user.department)
+        main_user_favorite_coffee = set(data_user.coffee_type)
         for user in all_users:
             user = CVInterface.from_dict(user)
             if user.id == data_user.id:
                 continue
-            user_department = set(user.work_department)
-            user_favorite_coffee = set(user.favorite_coffee)
+            user_department = set(user.department)
+            user_favorite_coffee = set(user.coffee_type)
 
             cnt_department = len(main_user_department & user_department)
             cnt_favorite_coffee = len(main_user_favorite_coffee & user_favorite_coffee)

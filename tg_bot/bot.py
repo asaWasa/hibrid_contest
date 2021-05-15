@@ -6,6 +6,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.utils import executor
 from database.cv_interface import CVInterface as CV
 import aiogram.utils.markdown as md
+from constants import *
 
 
 def main_key_board():
@@ -48,6 +49,7 @@ class AuthState(StatesGroup):
     name = State()
     department = State()
     coffee_type = State()
+    end = State()
 
 
 @dp.message_handler(commands='start', state="*")
@@ -87,16 +89,39 @@ async def auth_name(message: types.Message, state: FSMContext):
     name = message.text
     async with state.proxy() as user_data:
         user_data['name'] = name
-    await message.answer('Как называется твой отдел?')
+    await message.answer('Выбери отдел в котором работаешь:')
     await AuthState.department.set()
 
 
 @dp.message_handler(state=AuthState.department)
 async def auth_dep(message: types.Message, state: FSMContext):
+
+    fl = True
+    departments = list()
+    while fl:
+        try:
+            if message.text == "Закончить выбор":
+                fl = False
+                await AuthState.end.set()
+
+            elif DEPARTMENT.in_values(int(message.text)):
+                departments.append(message.text)
+
+        except:
+            await message.answer('Такого отдела не существует!')
+
+    await message.answer(departments)
+
+
+
+
+
+@dp.message_handler(state=AuthState.end)
+async def auth_dep(message: types.Message, state: FSMContext):
     _id = get_id()
     data = dict()
     data['id'] = _id
-    data["department"] = message.text
+    data = add_list_elem(data, 'departament', message.text)
     async with state.proxy() as user_data:
         data["coffee_type"] = user_data['coffee_type']
         data["real_name"] = user_data['name']
@@ -107,10 +132,19 @@ async def auth_dep(message: types.Message, state: FSMContext):
         data["tg_username"] = user_data['tg_data']['username']
         data["tg_language_code"] = user_data['tg_data']['language_code']
 
-    # await message.answer(CV(data).to_dict())
     db_users.push(CV(data).to_dict())
     await message.answer('Профиль успешно создан', reply_markup=main_key_board())
     await MainState.main.set()
+
+
+def add_list_elem(object, key, element):
+    try:
+        if object[key] is None:
+            raise
+        object[key].append(element)
+    except:
+        object[key] = list()
+        object[key].append(element)
 
 
 @dp.message_handler(Text(equals='Предложить собеседника'), state=MainState.main)
