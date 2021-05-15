@@ -73,7 +73,30 @@ async def cmd_auth(message: types.Message, state: FSMContext):
     await message.answer("Расскажи о себе", reply_markup=types.ReplyKeyboardRemove())
     await message.answer('Какой кофе любишь?')
     await AuthState.coffee_type.set()
+    coffees = ['Ristretto', 'Espresso', 'Americano',
+               'Double_espresso', 'Kapucino', 'Latte',
+               'Kakao', 'Marshmello']
+    btns = list()
+    media = types.InlineKeyboardMarkup(row_width=1)
+    for coffee in coffees:
+        btns.append(types.InlineKeyboardButton("{}".format(coffee), callback_data='add_coffee_{}'.format(coffee)))
+    media.add(*btns)
+    await message.answer('Выберите какие виды вы педпочитаете:', reply_markup=media)
 
+
+@dp.callback_query_handler(Text(equals='add_coffee_' + 'Ristretto'), state=AuthState.coffee_type)
+async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if COFFEE.RISTRETTO in user_data['coffee']:
+                user_data['coffee'].pop(COFFEE.RISTRETTO)
+            elif user_data['coffee']:
+                user_data['coffee'].add(COFFEE.RISTRETTO)
+        except:
+            user_data['coffee'] = set()
+            user_data['coffee'].add(COFFEE.RISTRETTO)
+
+        await query.message.answer(user_data)
 
 @dp.message_handler(state=AuthState.coffee_type)
 async def auth_name(message: types.Message, state: FSMContext):
@@ -115,6 +138,7 @@ async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
             user_data['department'].add(DEPARTMENT.MEDIA)
 
         await query.message.answer(user_data)
+
 
 @dp.message_handler(state=AuthState.department)
 async def auth_dep(message: types.Message, state: FSMContext):
