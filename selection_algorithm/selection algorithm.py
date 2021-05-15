@@ -14,7 +14,6 @@ class SelectionAlgorithm:
         all_users_new = []
         main_user_department = set(data_user.work_department)
         main_user_favorite_coffee = set(data_user.favorite_coffee)
-        main_user_rating = data_user.rating
         for user in all_users:
             user = CVInterface.from_dict(user)
             if user.id == data_user.id:
