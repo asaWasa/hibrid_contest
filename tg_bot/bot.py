@@ -8,6 +8,7 @@ from database.cv_interface import CVInterface as CV
 import aiogram.utils.markdown as md
 from constants import *
 from _algorithm.selection_algorithm import *
+import time
 
 def main_keyboard(idx):
     cnt_meetings = db_meetings.find_one('tg_id', idx)
@@ -64,6 +65,7 @@ class MainState(StatesGroup):
     main = State()
     selection = State()
     settings = State()
+    set_time = State()
 
 
 class AuthState(StatesGroup):
@@ -481,7 +483,6 @@ def add_list_elem(object, key, element):
 
 @dp.message_handler(Text(equals='Предложить собеседника'), state=MainState.main)
 async def get_random_user(message: types.Message, state: FSMContext):
-
     markup = reply_selection_keyboard()
     _object = SelectionAlgorithm()
     await message.answer('Пригласить на кофе?', reply_markup=markup)
@@ -514,6 +515,18 @@ async def get_random_user(message: types.Message, state: FSMContext):
 async def get_random_user(message: types.Message, state: FSMContext):
     time = reply_submit_keyboard()
     await message.answer('Выберите дату и время когда хотите встретится', reply_markup=time)
+    await MainState.set_time.set()
+
+
+@dp.callback_query_handler(Text(equals='Через час'), state=MainState.set_time)
+async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        select_user = user_data['select_user']
+
+    db_meetings.push({'tg_id': query.from_user.id,
+                      'meetings': {'target': select_user,
+                                    'time':  datetime.datetime.fromtimestamp(time.time() // 1000 + 3600)}})
+    await query.message.answer('Встреча записана!')
 
 
 @dp.message_handler(Text(equals='->'), state=MainState.selection)
