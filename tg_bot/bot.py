@@ -127,8 +127,96 @@ async def auth_name(message: types.Message, state: FSMContext):
     await message.answer('Выберите отдел:', reply_markup=media)
     await AuthState.department.set()
 
+# -----------------------------------------------------------------
+
+
 
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Marketing'), state=AuthState.department)
+async def callback_button_marketing(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if DEPARTMENT.MARKETING in user_data['department']:
+                user_data['department'].pop(DEPARTMENT.MARKETING)
+            elif user_data['department']:
+                user_data['department'].add(DEPARTMENT.MARKETING)
+        except:
+            user_data['department'] = set()
+            user_data['department'].add(DEPARTMENT.MARKETING)
+
+        await query.message.answer(user_data)
+
+
+@dp.callback_query_handler(Text(equals='add_dep_' + 'Finance'), state=AuthState.department)
+async def callback_button_finance(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if DEPARTMENT.FINANCE in user_data['department']:
+                user_data['department'].pop(DEPARTMENT.FINANCE)
+            elif user_data['department']:
+                user_data['department'].add(DEPARTMENT.FINANCE)
+        except:
+            user_data['department'] = set()
+            user_data['department'].add(DEPARTMENT.FINANCE)
+
+        await query.message.answer(user_data)
+
+
+@dp.callback_query_handler(Text(equals='add_dep_' + 'Dev and testing'), state=AuthState.department)
+async def callback_button_dev_test(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if DEPARTMENT.DEV_AND_TESTING in user_data['department']:
+                user_data['department'].pop(DEPARTMENT.DEV_AND_TESTING)
+            elif user_data['department']:
+                user_data['department'].add(DEPARTMENT.DEV_AND_TESTING)
+        except:
+            user_data['department'] = set()
+            user_data['department'].add(DEPARTMENT.DEV_AND_TESTING)
+
+        await query.message.answer(user_data)
+
+
+@dp.callback_query_handler(Text(equals='add_dep_' + 'Media_Bayer'), state=AuthState.department)
+async def callback_button_media_bayer(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if DEPARTMENT.MEDIA_BAYER in user_data['department']:
+                user_data['department'].pop(DEPARTMENT.MEDIA_BAYER)
+            elif user_data['department']:
+                user_data['department'].add(DEPARTMENT.MEDIA_BAYER)
+        except:
+            user_data['department'] = set()
+            user_data['department'].add(DEPARTMENT.MEDIA_BAYER)
+        await query.message.answer(user_data)
+
+@dp.callback_query_handler(Text(equals='add_dep_' + 'Sales'), state=AuthState.department)
+async def callback_button_sales(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if DEPARTMENT.SALES in user_data['department']:
+                user_data['department'].pop(DEPARTMENT.SALES)
+            elif user_data['department']:
+                user_data['department'].add(DEPARTMENT.SALES)
+        except:
+            user_data['department'] = set()
+            user_data['department'].add(DEPARTMENT.SALES)
+        await query.message.answer(user_data)
+
+@dp.callback_query_handler(Text(equals='add_dep_' + 'Partner relations'), state=AuthState.department)
+async def callback_button_partner_rel(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if DEPARTMENT.PARTNER_RELATIONS in user_data['department']:
+                user_data['department'].pop(DEPARTMENT.PARTNER_RELATIONS)
+            elif user_data['department']:
+                user_data['department'].add(DEPARTMENT.PARTNER_RELATIONS)
+        except:
+            user_data['department'] = set()
+            user_data['department'].add(DEPARTMENT.PARTNER_RELATIONS)
+        await query.message.answer(user_data)
+
+
+@dp.callback_query_handler(Text(equals='add_dep_' + "Media"), state=AuthState.department)
 async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as user_data:
         try:
@@ -139,7 +227,20 @@ async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
         except:
             user_data['department'] = set()
             user_data['department'].add(DEPARTMENT.MEDIA)
+        await query.message.answer(user_data)
 
+
+@dp.callback_query_handler(Text(equals='add_dep_' + "Administrative staff"), state=AuthState.department)
+async def callback_button_administrative_stuff(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if DEPARTMENT.ADMINISTRATIVE_STAFF in user_data['department']:
+                user_data['department'].pop(DEPARTMENT.ADMINISTRATIVE_STAFF)
+            elif user_data['department']:
+                user_data['department'].add(DEPARTMENT.ADMINISTRATIVE_STAFF)
+        except:
+            user_data['department'] = set()
+            user_data['department'].add(DEPARTMENT.ADMINISTRATIVE_STAFF)
         await query.message.answer(user_data)
 
 
