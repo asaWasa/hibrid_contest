@@ -401,11 +401,21 @@ async def get_random_user(message: types.Message, state: FSMContext):
     _object = SelectionAlgorithm()
     await message.answer('Пригласить на кофе?', reply_markup=markup)
     for user in _object.get_selection(CV.from_dict(db_users.find_one('tg_id', message.from_user.id))):
+        coffee_list = ''
+        department_list = ''
+        for coffee in user.coffee_type:
+            coffee_list += COFFEE.get_string(coffee) + ' '
+        for department in user.department:
+            department_list += DEPARTMENT.get_string(department) + ' '
+
         await bot.send_message(message.chat.id,
                                md.text(
-                                    md.text("Меня зовут:", user.real_name +'\n'),
-                                    md.text("Мой любимый кофе:", str(user.coffee_type) + '\n'),
-                                    md.text("Я работаю в отделе(-ax):", str(user.department) + '\n'),
+                                    md.text("Меня зовут: ", user.real_name +'\n'),
+                                    md.text("Мои любимые кофе: ", coffee_list + '\n'),
+                                    md.text("Я работаю в отделе(-ax): ", department_list + '\n'),
+                                    md.text("Обо мне: ", user.about + '\n'),
+                                    md.text("Дата регистрации: ", user.register_date.strftime('%d/%m/%Y') + '\n'),
+                                    md.text("Мой рейтинг: ", str(user.rating) + '\n'),
                                       )
                               )
         async with state.proxy() as user_data:
