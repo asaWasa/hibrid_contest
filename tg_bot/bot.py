@@ -509,19 +509,19 @@ async def get_random_user(message: types.Message, state: FSMContext):
 @dp.message_handler(Text(equals='Да'), state=MainState.selection)
 async def get_random_user(message: types.Message, state: FSMContext):
     time = reply_submit_keyboard()
-    await message.answer('Выберите дату и время когда хотите встретится', reply_markup=time)
+    await message.answer('Выберите время когда хотите встретится', reply_markup=time)
     await MainState.set_time.set()
 
 
-@dp.callback_query_handler(Text(equals='Через час'), state=MainState.set_time)
-async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
+@dp.message_handler(Text(equals='Через час'), state=MainState.set_time)
+async def button_media(message: types.Message, state: FSMContext):
     async with state.proxy() as user_data:
         select_user = user_data['select_user']
 
-    db_meetings.push({'tg_id': query.from_user.id,
+    db_meetings.push({'tg_id': message.from_user.id,
                       'meetings': {'target': select_user,
                                     'time':  datetime.datetime.fromtimestamp(time.time() // 1000 + 3600)}})
-    await query.message.answer('Встреча записана!')
+    await message.answer('Встреча записана!')
 
 
 @dp.message_handler(Text(equals='->'), state=MainState.selection)
