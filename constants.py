@@ -16,7 +16,9 @@ class DB_FIELDS:
     GENDER = 'gender'
     PREFERRED_GENDER = 'preferred_gender'
     ABOUT = 'about'
+    REGISTER_DATE = 'register_date'
     INTERESTS = 'interests'
+    RATING = 'rating'
 
 class INTERESTS:
     pass

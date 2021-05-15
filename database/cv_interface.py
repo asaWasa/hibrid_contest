@@ -3,7 +3,7 @@ from constants import *
 class CVInterface:
     def __init__(self, id, tg_id, tg_is_bot, tg_first_name, tg_username,
                  tg_language_code, real_name, favorite_coffee, work_department,
-                 family_status, gender, preferred_gender, about, interests=[]):
+                 family_status, gender, preferred_gender, about, register_date, interests=[], rating=5.0):
         self.id = id
         self.tg_id = tg_id
         self.tg_is_bot = tg_is_bot
@@ -17,7 +17,9 @@ class CVInterface:
         self.gender = gender
         self.preferred_gender = preferred_gender
         self.about = about
+        self.register_date = register_date
         self.interests = interests
+        self.rating = rating
 
     def to_dict(self):
         res = dict()
@@ -34,7 +36,9 @@ class CVInterface:
         res[DB_FIELDS.GENDER] = self.gender
         res[DB_FIELDS.PREFERRED_GENDER] = self.preferred_gender
         res[DB_FIELDS.ABOUT] = self.about
+        res[DB_FIELDS.REGISTER_DATE] = self.register_date
         res[DB_FIELDS.INTERESTS] = self.interests
+        res[DB_FIELDS.RATING] = self.rating
         return res
 
     @classmethod
@@ -52,7 +56,9 @@ class CVInterface:
         gender = data_dict[DB_FIELDS.GENDER]
         preferred_gender = data_dict[DB_FIELDS.PREFERRED_GENDER]
         about = data_dict[DB_FIELDS.ABOUT]
+        register_date = data_dict[DB_FIELDS.REGISTER_DATE]
         interests = data_dict[DB_FIELDS.INTERESTS]
+        rating = data_dict[DB_FIELDS.RATING]
         return cls(id, tg_id, tg_is_bot, tg_first_name, tg_username,
                  tg_language_code, real_name, favorite_coffee, work_department,
-                 family_status, gender, preferred_gender, about, interests)
+                 family_status, gender, preferred_gender, about, register_date, interests, rating)
