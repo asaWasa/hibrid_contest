@@ -1,4 +1,4 @@
-from tg_bot.loader import dp, bot, db_users
+from tg_bot.loader import dp, bot, db_users, db_meetings
 from aiogram import types
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -9,10 +9,15 @@ import aiogram.utils.markdown as md
 from constants import *
 from _algorithm.selection_algorithm import *
 
-def main_keyboard():
+def main_keyboard(idx):
+    cnt_meetings = db_meetings.find_one('tg_id', idx)
+    if cnt_meetings is None:
+        cnt_meetings = 0
+    else:
+        cnt_meetings = len(cnt_meetings['meetings'])
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
     markup.add('Предложить собеседника')
-    markup.add('Посмотреть встречи')
+    markup.add(f'Посмотреть встречи({cnt_meetings})')
     markup.add('Заполнить профиль')
     return markup
 
@@ -77,7 +82,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
     async with state.proxy() as user_data:
         user_data['tg_data'] = user
     if user_in_base(user.id):
-        markup = main_keyboard()
+        markup = main_keyboard(message.from_user.id)
         await message.answer("Привет, {}!".format(str(user.first_name)), reply_markup=markup)
         await MainState.main.set()
     else:
@@ -455,7 +460,7 @@ async def auth_dep(message: types.Message, state: FSMContext):
         data["tg_language_code"] = user_data['tg_data']['language_code']
 
     db_users.push(CV(data).to_dict())
-    await message.answer('Отлично! профиль успешно создан', reply_markup=main_keyboard())
+    await message.answer('Отлично! профиль успешно создан', reply_markup=main_keyboard(message.from_user.id))
     await MainState.main.set()
 
 
