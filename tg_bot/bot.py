@@ -91,29 +91,34 @@ async def auth_name(message: types.Message, state: FSMContext):
         user_data['name'] = name
     await message.answer('Выбери отдел в котором работаешь:')
     await AuthState.department.set()
+    departments = ['Marketing', 'Finance', 'Dev and testing',
+                   'Media_Bayer', 'Sales', 'Partner relations', "Media", "Administrative staff"]
+    btns = list()
+    media = types.InlineKeyboardMarkup(row_width=1)
+    for dep in departments:
+        btns.append(types.InlineKeyboardButton("{}".format(dep), callback_data='add_dep_{}'.format(dep)))
+    media.add(*btns)
+    await message.answer('Выберите отдел:', reply_markup=media)
+    await AuthState.department.set()
 
+
+@dp.callback_query_handler(Text(equals='add_dep_' + 'Marketing'), state=AuthState.department)
+async def callback_button_media(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as user_data:
+        try:
+            if DEPARTMENT.MEDIA in user_data['department']:
+                user_data['department'].pop(DEPARTMENT.MEDIA)
+            elif user_data['department']:
+                user_data['department'].add(DEPARTMENT.MEDIA)
+        except:
+            user_data['department'] = set()
+            user_data['department'].add(DEPARTMENT.MEDIA)
+
+        await query.message.answer(user_data)
 
 @dp.message_handler(state=AuthState.department)
 async def auth_dep(message: types.Message, state: FSMContext):
-
-    fl = True
-    departments = list()
-    while fl:
-        try:
-            if message.text == "Закончить выбор":
-                fl = False
-                await AuthState.end.set()
-
-            elif DEPARTMENT.in_values(int(message.text)):
-                departments.append(message.text)
-
-        except:
-            await message.answer('Такого отдела не существует!')
-
-    await message.answer(departments)
-
-
-
+    pass
 
 
 @dp.message_handler(state=AuthState.end)
