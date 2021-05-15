@@ -52,6 +52,10 @@ class MongoDBDriver(DbDriverInterface):
         self.__prepare()
         return self.collection.find_one({key: value})
 
+    def find(self, key, value):
+        self.__prepare()
+        return self.collection.find({key: value})
+
     def get_last_item(self, param='id'):
         self.__prepare()
         return dict(list(self.collection.find().sort(param, -1).limit(1))[0])

@@ -20,9 +20,10 @@ def main_keyboard(idx):
         cnt_meetings = len(cnt_meetings['meetings'])
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
     markup.add('Предложить собеседника')
-    markup.add(f'Посмотреть встречи({cnt_meetings})')
+    # markup.add(f'встречи({cnt_meetings})')
+    markup.add('Посмотреть встречи')
     markup.add('Заполнить профиль')
-    return markup
+    return markup, cnt_meetings
 
 
 def reply_submit_keyboard():
@@ -30,7 +31,7 @@ def reply_submit_keyboard():
     markup.add('Через час')
     markup.add('Через 2 часа')
     markup.add('Через 5 часов')
-    markup.add('Через 7 часа')
+    markup.add('Через 7 часов')
     markup.add('Через 1 день')
     markup.add('Назад')
     return markup
@@ -88,8 +89,8 @@ async def cmd_start(message: types.Message, state: FSMContext):
     async with state.proxy() as user_data:
         user_data['tg_data'] = user
     if user_in_base(user.id):
-        markup = main_keyboard(message.from_user.id)
-        await message.answer("Привет, {}!".format(str(user.first_name)), reply_markup=markup)
+        markup, meetings = main_keyboard(message.from_user.id)
+        await message.answer("Привет, {} \n Тебе предложили встречу: {} раз(-а)!".format(str(user.first_name),str(meetings)), reply_markup=markup)
         await MainState.main.set()
     else:
         markup.add('Регистрация')
@@ -128,7 +129,6 @@ async def callback_button_ristretto(query: types.CallbackQuery, state: FSMContex
         for coffee in list(user_data['coffee']):
             coffee_list += COFFEE.get_string(coffee) + ' '
         await query.message.answer(coffee_list)
-
 
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Закончить выбор'), state=AuthState.coffee_type)
@@ -173,7 +173,6 @@ async def callback_button_americano(query: types.CallbackQuery, state: FSMContex
         await query.message.answer(coffee_list)
 
 
-
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Double_espresso'), state=AuthState.coffee_type)
 async def callback_button_double_espresso(query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as user_data:
@@ -190,7 +189,6 @@ async def callback_button_double_espresso(query: types.CallbackQuery, state: FSM
         for coffee in list(user_data['coffee']):
             coffee_list += COFFEE.get_string(coffee) + ' '
         await query.message.answer(coffee_list)
-
 
 
 @dp.callback_query_handler(Text(equals='add_coffee_' + 'Kapucino'), state=AuthState.coffee_type)
@@ -471,7 +469,8 @@ async def auth_dep(message: types.Message, state: FSMContext):
         data["tg_language_code"] = user_data['tg_data']['language_code']
 
     db_users.push(CV(data).to_dict())
-    await message.answer('Отлично! профиль успешно создан', reply_markup=main_keyboard(message.from_user.id))
+    markup, meetings = main_keyboard(message.from_user.id)
+    await message.answer('Отлично! профиль успешно создан', reply_markup=markup)
     await MainState.main.set()
 
 
@@ -538,7 +537,7 @@ async def button_media(message: types.Message, state: FSMContext):
     await message.answer('Встреча записана!')
 
 
-@dp.message_handler(Text(equals='Через 2 часa'), state=MainState.set_time)
+@dp.message_handler(Text(equals='Через 2 часа'), state=MainState.set_time)
 async def button_media(message: types.Message, state: FSMContext):
     async with state.proxy() as user_data:
         select_user = user_data['select_user']
@@ -605,8 +604,8 @@ async def button_media(message: types.Message, state: FSMContext):
 @dp.message_handler(Text(equals='Назад'), state='*')
 async def button_media(message: types.Message, state: FSMContext):
     await MainState.main.set()
-    markup = main_keyboard(message.from_user.id)
-    await message.answer('<-', reply_markup=markup)
+    markup, meetings = main_keyboard(message.from_user.id)
+    await message.answer('<- \nТебе предложили встречу: {} раз(-а)!'.format(meetings), reply_markup=markup)
 
 
 @dp.message_handler(Text(equals='->'), state=MainState.selection)
@@ -615,6 +614,13 @@ async def get_random_user(message: types.Message, state: FSMContext):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
     markup.add('Предложить собеседника')
     await message.answer('Предложить нового собеседника?', reply_markup=markup)
+
+@dp.message_handler(Text(equals='Посмотреть встречи'), state=MainState.main)
+async def get_random_user(message: types.Message, state: FSMContext):
+    meetings = dict(list(db_meetings.find('tg_id', message.from_user.id))[0])['meetings']
+    for meeting in meetings:
+        name = db_users.find_one('tg_id', meeting['target'])['real_name']
+        await message.answer('Имя - {},\nВремя - {}'.format(name, meeting['time'].strftime('%d/%m/%Y')))
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
