@@ -291,7 +291,7 @@ async def auth_name(message: types.Message, state: FSMContext):
     await message.answer('Выберите отдел(ы):', reply_markup=media)
     await AuthState.department.set()
 
-# -----------------------------------------------------------------
+# ----------------------------ДАЛЬШЕ БОГА НЕТ!!-------------------------------------
 
 
 @dp.callback_query_handler(Text(equals='add_dep_' + 'Marketing'), state=AuthState.department)
